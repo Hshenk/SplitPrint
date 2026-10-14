@@ -23,6 +23,7 @@ export function drawPreview(canvas, image, layout) {
     ctx.drawImage(image, 0, 0, width, height);
 
     canvas.classList.toggle('is-draggable', Boolean(layout) && layout.croppedFraction > 0.005);
+    if (!layout) return;
 
     const crop = {
         x: layout.crop.x * scale,
@@ -114,5 +115,5 @@ export function setupDrag(canvas, state, onChange) {
         start = null;
     };
     canvas.addEventListener('pointerup', stop);
-    canvas.addEventListener('pointercancal', stop);
+    canvas.addEventListener('pointercancel', stop);
 }

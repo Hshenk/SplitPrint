@@ -94,7 +94,7 @@ export function computeLayout(settings) {
     const paper = PAPER_SIZES[settings.paper];
     const inset = margin + GUTTER;
 
-    const portrait = planForPage(poster, paper.width, paper.height, inset, overlap)
+    const portrait = planForPage(poster, paper.width, paper.height, inset, overlap);
     const landscape = planForPage(poster, paper.height, paper.width, inset, overlap);
 
     if (!portrait || !landscape) {
