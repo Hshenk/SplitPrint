@@ -1,7 +1,7 @@
 // main.js: reads the form, remembers what's loaded
 import { computeLayout, fitSizes } from "./layout.js";
 import { drawPreview, setupDrag } from "./preview.js";
-
+import { buildPdf } from './pdf.js';
 
 const form = document.getElementById('settings');
 const dropZone = document.getElementById('drop-zone');
@@ -194,3 +194,23 @@ fitHeightButton.addEventListener('click', () => useFit('keepHeight'));
 // ---------- Keeping the preview live ----------
 setupDrag(previewCanvas, state, update);
 window.addEventListener('resize', update);
+
+// ---------- Downloading the PDF ----------
+downloadButton.addEventListener('click', async () => {
+    downloadButton.disabled = true;
+    downloadButton.textContent = 'Building PDF...';
+    // Building can take a few seconds. Pause briefly first so the button's new text gets painted.
+    await new Promise((resolve) => setTimeout(resolve, 50));
+
+    try {
+        const doc = buildPdf(state.image, state.layout);
+        const baseName = state.fileName.replace(/\.[^.]+$/, ''); // drop the file extension
+        doc.save(`${baseName}-splitprint.pdf`);
+    } catch (error) {
+        console.error(error);
+        showMessage(errorBox, 'Something went wrong while building the PDF.');
+    } finally {
+        downloadButton.textContent = 'Download PDF';
+        downloadButton.disabled = false;
+    }
+});
