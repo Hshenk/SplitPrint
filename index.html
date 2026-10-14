@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SplitPrint</title>
+  <meta name="description" content="Split one image across regular sheets of paper so it can be printed and taped together at poster size.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <h1>SplitPrint</h1>
+    <p>Print a poster-sized image on regular paper, then tape the sheets together.</p>
+  </header>
+
+  <main class="layout">
+
+    <!-- Left column: everything the user sets -->
+    <form id="settings" class="panel controls" novalidate>
+
+      <fieldset>
+        <legend><span class="step">1</span> Image</legend>
+        <label id="drop-zone" class="drop-zone">
+          <input id="file-input" class="visually-hidden" type="file" accept="image/*">
+          <span class="drop-title">Choose an image</span>
+          <span class="drop-hint">or drop one anywhere on this page</span>
+          <span id="file-info" class="file-info" hidden></span>
+        </label>
+      </fieldset>
+
+      <fieldset>
+        <legend><span class="step">2</span> Finished size</legend>
+        <div class="field-row">
+          <label class="field">
+            <span>Width</span>
+            <span class="unit-input">
+              <input id="width" type="number" min="1" step="0.25" value="24" inputmode="decimal">
+              <span class="unit">in</span>
+            </span>
+          </label>
+          <label class="field">
+            <span>Height</span>
+            <span class="unit-input">
+              <input id="height" type="number" min="1" step="0.25" value="18" inputmode="decimal">
+              <span class="unit">in</span>
+            </span>
+          </label>
+        </div>
+
+        <!-- Shown when the image's shape doesn't match the size above -->
+        <div id="ratio-notice" class="notice" hidden>
+          <p id="ratio-text"></p>
+          <div class="chips">
+            <button id="fit-width" class="chip" type="button"></button>
+            <button id="fit-height" class="chip" type="button"></button>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend><span class="step">3</span> Paper</legend>
+        <div class="field-row">
+          <label class="field">
+            <span>Paper size</span>
+            <select id="paper">
+              <option value="letter" selected>Letter (8.5 × 11 in)</option>
+              <option value="legal">Legal (8.5 × 14 in)</option>
+              <option value="tabloid">Tabloid (11 × 17 in)</option>
+              <option value="a4">A4 (210 × 297 mm)</option>
+              <option value="a3">A3 (297 × 420 mm)</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Orientation</span>
+            <select id="orientation">
+              <option value="auto" selected>Fewest sheets</option>
+              <option value="portrait">Portrait</option>
+              <option value="landscape">Landscape</option>
+            </select>
+          </label>
+        </div>
+        <div class="field-row">
+          <label class="field">
+            <span>Printer margin</span>
+            <span class="unit-input">
+              <input id="margin" type="number" min="0" max="2" step="0.05" value="0.25" inputmode="decimal">
+              <span class="unit">in</span>
+            </span>
+          </label>
+          <label class="field">
+            <span>Minimum overlap</span>
+            <span class="unit-input">
+              <input id="overlap" type="number" min="0" max="3" step="0.25" value="0.5" inputmode="decimal">
+              <span class="unit">in</span>
+            </span>
+          </label>
+        </div>
+        <p class="help">The margin is the strip around the edge your printer can't reach. Raise it if the corner marks get cut off.</p>
+      </fieldset>
+
+      <dl id="summary" class="summary" hidden>
+        <div><dt>Sheets</dt><dd id="sum-sheets"></dd></div>
+        <div><dt>Paper</dt><dd id="sum-paper"></dd></div>
+        <div><dt>Overlap</dt><dd id="sum-overlap"></dd></div>
+        <div><dt>Print detail</dt><dd id="sum-dpi"></dd></div>
+      </dl>
+
+      <p id="warning" class="notice notice-warn" hidden></p>
+      <p id="error" class="notice notice-error" role="alert" hidden></p>
+
+      <button id="download" class="primary" type="button" disabled>Download PDF</button>
+      <p class="help">In the print dialog choose <strong>Actual size</strong> or <strong>100%</strong>, not “Fit to page”, or the sheets won't line up.</p>
+    </form>
+
+    <!-- Right column: the preview -->
+    <section class="panel preview" aria-label="Preview">
+      <div id="preview-empty" class="empty">
+        <p class="empty-title">No image yet</p>
+        <p>Choose an image to see how it will be split into sheets.</p>
+      </div>
+
+      <div id="preview-stage" class="preview-stage" hidden>
+        <canvas id="preview"></canvas>
+      </div>
+
+      <ul id="legend" class="legend" hidden>
+        <li><span class="swatch swatch-sheet"></span> One sheet</li>
+        <li><span class="swatch swatch-overlap"></span> Overlap</li>
+        <li><span class="swatch swatch-cropped"></span> Cropped off</li>
+      </ul>
+    </section>
+
+  </main>
+
+  <script src="vendor/jspdf.umd.min.js"></script>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
